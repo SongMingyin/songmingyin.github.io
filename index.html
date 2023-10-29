@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="zn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            margin: 30px auto;
+            width: 400px;
+        }
+
+        tr {
+            background: #CCCCFF;
+            text-align: right;
+        }
+
+        #title {
+            text-align: center;
+        }
+
+        td {
+
+        }
+
+        textarea[name="introduction"] {
+            width: 97.7%;
+            height: 100px;
+        }
+
+        table td:nth-child(2) {
+            text-align: left;
+        }
+
+        #provinceSelect {
+            height: 25px;
+        }
+
+        #errormessage {
+            color: red;
+            font-size: 10px;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<table border="1">
+    <!--  设置第一列的宽度为127px  -->
+    <colgroup>
+        <col style="width: 127px">
+    </colgroup>
+    <tr id="title">
+        <td colspan="2">用户注册</td>
+    </tr>
+    <tr>
+        <td>用户名：</td>
+        <td>
+            <label>
+                <input type="text" name="username" id="username">
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>密码：</td>
+        <td>
+            <label>
+                <input type="password" name="password" id="password">
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>确认密码：</td>
+        <td>
+            <label>
+                <input type="password" name="confirmed_password" id="confirmed_password">
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>性別：</td>
+        <td>
+            <label>
+                <input type="radio" name="sex" value="male" id="male" checked>
+                <label>男</label>
+            </label>
+            <label>
+                <input type="radio" name="sex" value="female" id="female">
+                <label>女</label>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>你来自：</td>
+        <td>
+            <label>
+                <select id="provinceSelect" name="province">
+                    <option value="None" id="province_none" selected>请选择省份</option>
+                </select>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>自我介绍：</td>
+        <td>
+            <label>
+                <textarea name="introduction" id="introduction"></textarea>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button onclick="submit()">提交</button>
+            <button onclick="reset()">重置</button>
+            <span id="errormessage"></span>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    //中国的省份
+    let provinces = [
+        {value: "Beijing", name: "北京市"},
+        {value: "Tianjin", name: "天津市"},
+        {value: "Hebei", name: "河北省"},
+        {value: "Shan1xi", name: "山西省"},
+        {value: "Neimenggu", name: "内蒙古自治区"},
+        {value: "Liaoning", name: "辽宁省"},
+        {value: "JIlin", name: "吉林省"},
+        {value: "Heilongjiang", name: "黑龙江省"},
+        {value: "Shanghai", name: "上海市"},
+        {value: "Jiangsu", name: "江苏省"},
+        {value: "Zhejiang", name: "浙江省"},
+        {value: "Anhui", name: "安徽省"},
+        {value: "Fujian", name: "福建省"},
+        {value: "Jiangxi", name: "江西省"},
+        {value: "Shandong", name: "山东省"},
+        {value: "Henan", name: "河南省"},
+        {value: "Hubei", name: "湖北省"},
+        {value: "Hunan", name: "湖南省"},
+        {value: "Guangdong", name: "广东省"},
+        {value: "Guangxi", name: "广西壮族自治区"},
+        {value: "Sichuang", name: "四川省"},
+        {value: "Guizhou", name: "贵州省"},
+        {value: "Yunnan", name: "云南省"},
+        {value: "Xizang", name: "西藏自治区"},
+        {value: "Shan3xi", name: "陕西省"},
+        {value: "Gansu", name: "甘肃省"},
+        {value: "Qinghai", name: "青海省"},
+        {value: "Ningxia", name: "宁夏回族自治区"},
+        {value: "Xinjiang", name: "新疆维吾尔自治区"},
+        {value: "Taiwan", name: "台湾省"}
+    ];
+    //获取省份下拉列表
+    let provinceSelect = document.getElementById("provinceSelect");
+    //根据数组动态生成下拉选项
+    provinces.forEach(function (province) {
+        let option = document.createElement("option");
+        option.innerText = province.name;
+        option.value = province.value;
+        provinceSelect.appendChild(option);
+    });
+
+    function submit() {
+        // 信息合法性检验
+        let errormessage = document.getElementById("errormessage");
+        let username = document.getElementById("username").value.trim(); //去除首尾空格后的username
+        let password = document.getElementById("password").value;
+        let confirmed_password = document.getElementById("confirmed_password").value;
+        let provinceSelect = document.getElementById("provinceSelect");
+        let province = provinceSelect.options[provinceSelect.selectedIndex].value;
+        let introduction = document.getElementById("introduction").value;
+
+        if (username.length === 0) {
+            errormessage.innerText = "用户名不能为空！";
+        } else if (username.indexOf(" ") >= 0) {
+            errormessage.innerText = "用户名不能包含空格！";
+        } else if (username === password) {
+            errormessage.innerText = "用户名和密码不能相同！";
+        } else if (username.length < 3 || username.length > 18) {
+            errormessage.innerText = "用户名长度不符合规范！";
+        } else if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{1,16}[a-zA-Z0-9]$/.test(username)) {
+            errormessage.innerText = "用户名格式不符合规范！";
+        } else if (password.length < 6 || password.length > 16) {
+            errormessage.innerText = "密码长度不符合规范！";
+        } else if (!/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~=-]+$/.test(password)) {
+            errormessage.innerText = "密码格式不符合规范！";
+        } else if (password !== confirmed_password) {
+            errormessage.innerText = "两次输入的密码不一致！";
+        } else if (province === "None") {
+            errormessage.innerText = "请选择省份！";
+        } else if (introduction.length === 0) {
+            errormessage.innerText = "自我介绍不能为空！";
+        } else {
+            errormessage.innerText = "提交成功！";
+        }
+    }
+
+    function reset() {
+        document.getElementById("errormessage").innerText = "";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("confirmed_password").value = "";
+        document.getElementById("male").checked = "checked";
+        document.getElementById("province_none").selected = "selected";
+        document.getElementById("introduction").value = "";
+    }
+
+</script>
+</body>
+</html>
